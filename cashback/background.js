@@ -1,5 +1,4 @@
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  console.log(msg);
   switch(msg.name) {
     case 'get-applicable-deal':
       console.log("Getting applicable deal");
@@ -25,7 +24,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                     Amount: amount
                   };
 
-                  console.log(applicableDeal);
                   sendResponse({deal: applicableDeal, error: null});
                   return;
                 }
@@ -33,14 +31,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             }
           }).catch((error) => {
             console.log(error);
-            sendResponse({deal: deal, error: new Error('Error encountered while retrieving deals.', { cause: error })});
+            sendResponse({deal: null, error: new Error('Error encountered while retrieving deals.', { cause: error })});
           });
           break;
 
       case 'activate-deal':
         console.log("Activating deal");
         var url = "http://localhost:8082/activate-deal/"+msg.id;
-        console.log(url);
         fetch(url, {method: "POST"}).
           then(response => {
               sendResponse({activated: true, error: null});
